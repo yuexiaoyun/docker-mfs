@@ -16,7 +16,7 @@ app.use(convert(body({
     formidable: {
         keepExtensions: true,
         uploadDir: '/data/mfs/tmp',
-        hash: 'md5'
+        hash: 'sha1'
     }
 })));
 

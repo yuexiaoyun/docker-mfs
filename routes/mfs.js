@@ -39,20 +39,13 @@ router.get('crossdomain.xml', function*() {
 
 
 router.post('*', function*() {
-    //console.log(this.params);
-    // console.log(this.request.body.files);
-    //console.log(this.request.body.files);
 
-    var file = this.request.body.files.file;
+    var file = this.request.body.files[0];
     var extension = getExtension(file.name);
     var nfilename = file.hash + '.' + extension;
     var npath = this.params[0];
     npath = npath.replace('//', '/');
     var dic = path.join("/data/mfs", npath);
-
-    // mkdirs(dic, 511, function(p) {
-    //     console.log(p);
-    // });
     let nf = path.join(dic, nfilename);
     mkdirs(path.dirname(nf), 511, function(p) {
         //console.log(p);
