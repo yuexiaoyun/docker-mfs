@@ -15,6 +15,7 @@ RUN npm install
 COPY . /opt/mfs/
 
 VOLUME /data/mfs
+VOLUME /data/mfs/tmp
 
 ENV NODE_ENV dev
 

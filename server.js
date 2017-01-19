@@ -15,7 +15,8 @@ app.use(convert(body({
     multipart: true,
     formidable: {
         keepExtensions: true,
-        uploadDir: '/data/mfs/'
+        uploadDir: '/data/mfs/tmp',
+        hash: 'md5'
     }
 })));
 
