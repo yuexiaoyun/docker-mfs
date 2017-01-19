@@ -4,6 +4,47 @@ const Router = require('koa-router');
 const fs = require('fs');
 const path = require("path")
 
+function save(npath, file) {
+    return new Promise((resolve, reject) => {
+        try {
+            var extension = getExtension(file.name);
+            var nfilename = file.hash + '.' + extension;
+
+            npath = npath.replace('//', '/');
+
+            var dic = path.join("/data/mfs", npath);
+            let nf = path.join(dic, nfilename);
+            var data = {
+                "result": 0,
+                "errorCode": 0,
+                "msg": "SUCCESS",
+                "info": {
+                    "url": "http://rimg3.ciwong.net/" + npath + '/' + nfilename, //upload_0bf69031530ec1f342dcce3155b83eec.xlsx
+                    "filename": file.name,
+                    "md5filename": nfilename,
+                    "suffix": "." + extension,
+                    "filesize": file.size
+                }
+            };
+
+            mkdirs(path.dirname(nf), 511, function(p) {
+                fs.exists(nf, function(exists) {
+                    console.log([exists, file.path, nf]);
+                    if (exists) {
+                        resolve(data);
+                    } else {
+                        fs.rename(file.path, nf, function(a) {
+                            resolve(data);
+                        });
+                    }
+                });
+            });
+        } catch (e) {
+            reject(e);
+        }
+    });
+}
+
 function getExtension(fpath) {
     var split = fpath.split(".");
     return split[split.length - 1];
@@ -40,10 +81,8 @@ router.get('crossdomain.xml', function*() {
 
 router.post('*', function*() {
 
-    var file; //= this.request.body.files;
-    //console.log(this.request.body);
-
-
+    var file;
+    var npath = this.params[0];
     if (this.request.body.files) {
         for (var key in this.request.body.files) {
             file = this.request.body.files[key];
@@ -56,42 +95,8 @@ router.post('*', function*() {
             "msg": 'No file sent'
         }
     }
+    this.body = yield save(npath, file);
 
-    var extension = getExtension(file.name);
-    var nfilename = file.hash + '.' + extension;
-    var npath = this.params[0];
-
-
-    npath = npath.replace('//', '/');
-
-
-    var dic = path.join("/data/mfs", npath);
-    let nf = path.join(dic, nfilename);
-    mkdirs(path.dirname(nf), 511, function(p) {
-        //console.log(p);
-        fs.exists(nf, function(exists) {
-            console.log([exists, file.path, nf]);
-            if (exists)
-                console.log(exists);
-            else
-                fs.rename(file.path, nf);
-        });
-    });
-
-
-    var data = {
-        "result": 0,
-        "errorCode": 0,
-        "msg": "SUCCESS",
-        "info": {
-            "url": "http://rimg3.ciwong.net/" + npath + '/' + nfilename, //upload_0bf69031530ec1f342dcce3155b83eec.xlsx
-            "filename": file.name,
-            "md5filename": nfilename,
-            "suffix": "." + extension,
-            "filesize": file.size
-        }
-    };
-    this.body = data;
 });
 
 module.exports = router;
