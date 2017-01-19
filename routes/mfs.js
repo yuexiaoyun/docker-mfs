@@ -26,9 +26,17 @@ var mkdirs = function(dirpath, mode, callback) {
 
 var router = new Router();
 
-router.get('/', function(ctx, next) {
-    ctx.body = 'MFS';
+router.get('/', function*() {
+    this.body = 'MFS';
 });
+
+
+
+router.get('crossdomain.xml', function*() {
+    this.set('Content-Type', 'text/xml');
+    this.body = '<?xml version="1.0" ?><cross-domain-policy><allow-access-from domain="*" /></cross-domain-policy>';
+});
+
 
 router.post('*', function*() {
     //console.log(this.params);
