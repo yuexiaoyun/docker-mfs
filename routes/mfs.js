@@ -47,6 +47,7 @@ router.post('*', function*() {
     var extension = getExtension(file.name);
     var nfilename = file.hash + '.' + extension;
     var npath = this.params[0];
+    npath = npath.replace('//', '/');
     var dic = path.join("/data/mfs", npath);
 
     // mkdirs(dic, 511, function(p) {
