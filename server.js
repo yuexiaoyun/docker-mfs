@@ -14,6 +14,7 @@ app.use(convert(logger()));
 app.use(convert(body({
     multipart: true,
     formidable: {
+        multiples: true,
         keepExtensions: true,
         uploadDir: '/data/mfs/tmp',
         hash: 'sha1'

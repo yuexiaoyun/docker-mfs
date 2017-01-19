@@ -4,11 +4,11 @@ const Router = require('koa-router');
 const fs = require('fs');
 const path = require("path")
 
-
 function getExtension(fpath) {
     var split = fpath.split(".");
     return split[split.length - 1];
 }
+
 // 创建所有目录
 var mkdirs = function(dirpath, mode, callback) {
     fs.exists(dirpath, function(exists) {
@@ -40,11 +40,31 @@ router.get('crossdomain.xml', function*() {
 
 router.post('*', function*() {
 
-    var file = this.request.body.files[0];
+    var file; //= this.request.body.files;
+    //console.log(this.request.body);
+
+
+    if (this.request.body.files) {
+        for (var key in this.request.body.files) {
+            file = this.request.body.files[key];
+            break;
+        }
+    } else {
+        this.body = {
+            "result": 1,
+            "errorCode": 1,
+            "msg": 'No file sent'
+        }
+    }
+
     var extension = getExtension(file.name);
     var nfilename = file.hash + '.' + extension;
     var npath = this.params[0];
+
+
     npath = npath.replace('//', '/');
+
+
     var dic = path.join("/data/mfs", npath);
     let nf = path.join(dic, nfilename);
     mkdirs(path.dirname(nf), 511, function(p) {
@@ -64,7 +84,7 @@ router.post('*', function*() {
         "errorCode": 0,
         "msg": "SUCCESS",
         "info": {
-            "url": "http://mfs-bak.oss-cn-beijing.aliyuncs.com/" + npath + '/' + nfilename, //upload_0bf69031530ec1f342dcce3155b83eec.xlsx
+            "url": "http://rimg3.ciwong.net/" + npath + '/' + nfilename, //upload_0bf69031530ec1f342dcce3155b83eec.xlsx
             "filename": file.name,
             "md5filename": nfilename,
             "suffix": "." + extension,
