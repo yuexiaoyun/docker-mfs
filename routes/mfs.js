@@ -24,16 +24,6 @@ function save(npath, file) {
                 "filesize": file.size
             };
 
-            //如果是图片 返回图片尺寸
-            if (['jpg', 'gif', 'png', 'bmp'].indexOf(extension) > -1) {
-                var dimensions = sizeOf(file.path, function(err) {
-                    if (!err) {
-                        info.width = dimensions.width;
-                        info.height = dimensions.height;
-                    }
-                });
-            }
-
             var data = {
                 "result": 0,
                 "errorCode": 0,
