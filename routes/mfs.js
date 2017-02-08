@@ -15,6 +15,7 @@ function save(npath, file) {
 
             var dic = path.join("/data/mfs", npath);
             let nf = path.join(dic, nfilename);
+
             var info = {
                 "url": "http://rimg3.ciwong.net/" + npath + '/' + nfilename,
                 "filename": file.name,
@@ -25,10 +26,14 @@ function save(npath, file) {
 
             //如果是图片 返回图片尺寸
             if (['jpg', 'gif', 'png', 'bmp'].indexOf(extension) > -1) {
-                var dimensions = sizeOf(file.path);
-                info.width = dimensions.width;
-                info.height = dimensions.height;
+                var dimensions = sizeOf(file.path, function(err) {
+                    if (!err) {
+                        info.width = dimensions.width;
+                        info.height = dimensions.height;
+                    }
+                });
             }
+
             var data = {
                 "result": 0,
                 "errorCode": 0,
@@ -40,9 +45,21 @@ function save(npath, file) {
                 fs.exists(nf, function(exists) {
                     //console.log([exists, file.path, nf]);
                     if (exists) {
+                        //如果是图片 返回图片尺寸
+                        if (['jpg', 'gif', 'png', 'bmp'].indexOf(extension) > -1) {
+                            var dimensions = sizeOf(nf);
+                            data.info.width = dimensions.width;
+                            data.info.height = dimensions.height;
+                        }
                         resolve(data);
                     } else {
                         fs.rename(file.path, nf, function(a) {
+                            //如果是图片 返回图片尺寸
+                            if (['jpg', 'gif', 'png', 'bmp'].indexOf(extension) > -1) {
+                                var dimensions = sizeOf(nf);
+                                data.info.width = dimensions.width;
+                                data.info.height = dimensions.height;
+                            }
                             resolve(data);
                         });
                     }
