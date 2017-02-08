@@ -1,8 +1,9 @@
 'use strict';
 
 const Router = require('koa-router');
+const sizeOf = require('image-size');
 const fs = require('fs');
-const path = require("path")
+const path = require("path");
 
 function save(npath, file) {
     return new Promise((resolve, reject) => {
@@ -14,17 +15,25 @@ function save(npath, file) {
 
             var dic = path.join("/data/mfs", npath);
             let nf = path.join(dic, nfilename);
+            var info = {
+                "url": "http://rimg3.ciwong.net/" + npath + '/' + nfilename,
+                "filename": file.name,
+                "md5filename": nfilename,
+                "suffix": "." + extension,
+                "filesize": file.size
+            };
+
+            //如果是图片 返回图片尺寸
+            if (['jpg', 'gif', 'png', 'bmp'].indexOf(extension) > -1) {
+                var dimensions = sizeOf(nf);
+                info.width = dimensions.width;
+                info.height = dimensions.height;
+            }
             var data = {
                 "result": 0,
                 "errorCode": 0,
                 "msg": "SUCCESS",
-                "info": {
-                    "url": "http://rimg3.ciwong.net/" + npath + '/' + nfilename, //upload_0bf69031530ec1f342dcce3155b83eec.xlsx
-                    "filename": file.name,
-                    "md5filename": nfilename,
-                    "suffix": "." + extension,
-                    "filesize": file.size
-                }
+                "info": info
             };
 
             mkdirs(path.dirname(nf), 511, function(p) {
@@ -40,6 +49,7 @@ function save(npath, file) {
                 });
             });
         } catch (e) {
+            console.log(e);
             reject(e);
         }
     });
@@ -72,12 +82,10 @@ router.get('/', function*() {
 });
 
 
-
 router.get('crossdomain.xml', function*() {
     this.set('Content-Type', 'text/xml');
     this.body = '<?xml version="1.0" ?><cross-domain-policy><allow-access-from domain="*" /></cross-domain-policy>';
 });
-
 
 router.post('*', function*() {
 
@@ -98,5 +106,4 @@ router.post('*', function*() {
     this.body = yield save(npath, file);
 
 });
-
 module.exports = router;
