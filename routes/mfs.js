@@ -38,7 +38,7 @@ function save(npath, file) {
 
             mkdirs(path.dirname(nf), 511, function(p) {
                 fs.exists(nf, function(exists) {
-                    console.log([exists, file.path, nf]);
+                    //console.log([exists, file.path, nf]);
                     if (exists) {
                         resolve(data);
                     } else {
@@ -49,7 +49,7 @@ function save(npath, file) {
                 });
             });
         } catch (e) {
-            console.log(e);
+            console.error(e);
             reject(e);
         }
     });
