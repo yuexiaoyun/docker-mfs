@@ -89,28 +89,54 @@ router.get('/', function*() {
 });
 
 
-router.get('crossdomain.xml', function*() {
-    this.set('Content-Type', 'text/xml');
-    this.body = '<?xml version="1.0" ?><cross-domain-policy><allow-access-from domain="*" /></cross-domain-policy>';
+router.get('crossdomain.xml', ctx => {
+    var crossdomain = '<?xml version="1.0"?>\
+<cross-domain-policy>\
+  <allow-http-request-headers-from domain="*.ciwong.net" headers="*"/>\
+  <site-control permitted-cross-domain-policies="all"/>\
+  <allow-access-from domain="*" secure="false"/>\
+</cross-domain-policy>';
+    ctx.set('Content-Type', 'application/xml; charset=utf-8');
+    ctx.body = crossdomain;
 });
 
-router.post('*', function*() {
+router.post('admin_uc/images/10086', async ctx => {
 
-    var file;
-    var npath = this.params[0];
-    if (this.request.body.files) {
-        for (var key in this.request.body.files) {
-            file = this.request.body.files[key];
-            break;
+    var npath = 'admin_uc/images/10086';
+    if (ctx.request.body.files) {
+        var files = [];
+        for (var key in ctx.request.body.files) {
+            files.push(ctx.request.body.files[key]);
         }
+        var data = await save(npath, files[0]);
+        ctx.body = {
+            url: data.info.url,
+            title: data.info.filename,
+            original: data.info.filename,
+            state: 'SUCCESS'
+        };
     } else {
-        this.body = {
+        ctx.body = {
+            "state": '未知错误'
+        };
+    }
+});
+
+router.post('*', async ctx => {
+    var npath = ctx.params[0];
+    if (ctx.request.body.files) {
+        var files = [];
+        for (var key in ctx.request.body.files) {
+            files.push(ctx.request.body.files[key]);
+        }
+        ctx.body = await save(npath, files[0]);
+    } else {
+        ctx.body = {
             "result": 1,
             "errorCode": 1,
             "msg": 'No file sent'
-        }
+        };
     }
-    this.body = yield save(npath, file);
-
 });
+
 module.exports = router;
