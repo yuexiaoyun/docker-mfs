@@ -33,7 +33,6 @@ function save(npath, file) {
 
             mkdirs(path.dirname(nf), 511, function(p) {
                 fs.exists(nf, function(exists) {
-                    //console.log([exists, file.path, nf]);
                     if (exists) {
                         //如果是图片 返回图片尺寸
                         if (['jpg', 'gif', 'png', 'bmp'].indexOf(extension) > -1) {
@@ -44,7 +43,6 @@ function save(npath, file) {
                         resolve(data);
                     } else {
                         fs.rename(file.path, nf, function(a) {
-                            //如果是图片 返回图片尺寸
                             if (['jpg', 'gif', 'png', 'bmp'].indexOf(extension) > -1) {
                                 var dimensions = sizeOf(nf);
                                 data.info.width = dimensions.width;
@@ -96,7 +94,6 @@ router.get('crossdomain.xml', ctx => {
 });
 
 router.post('admin_uc/images/10086', async ctx => {
-
     var npath = 'admin_uc/images/10086';
     if (ctx.request.body.files) {
         var files = [];
