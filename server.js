@@ -25,6 +25,6 @@ router.use('/', mfs.routes(), mfs.allowedMethods());
 
 app.use(router.routes());
 
-app.listen(80, function() {
+app.listen(8080, function() {
     console.log('Server running on port 80');
 });
