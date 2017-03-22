@@ -1,4 +1,4 @@
-FROM daocloud.io/node:6.2.1
+FROM node:7.7-alpine
 
 MAINTAINER sfreee <sfreee@qq.com>
 
