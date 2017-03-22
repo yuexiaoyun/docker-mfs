@@ -26,5 +26,5 @@ router.use('/', mfs.routes(), mfs.allowedMethods());
 app.use(router.routes());
 
 app.listen(8080, function() {
-    console.log('Server running on port 80');
+    console.log('Server started http://localhost:8080');
 });

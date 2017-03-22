@@ -90,12 +90,7 @@ router.get('/', function*() {
 
 
 router.get('crossdomain.xml', ctx => {
-    var crossdomain = '<?xml version="1.0"?>\
-<cross-domain-policy>\
-  <allow-http-request-headers-from domain="*.ciwong.net" headers="*"/>\
-  <site-control permitted-cross-domain-policies="all"/>\
-  <allow-access-from domain="*" secure="false"/>\
-</cross-domain-policy>';
+    var crossdomain = '<?xml version="1.0"?><cross-domain-policy><allow-http-request-headers-from domain="*" headers="*"/><site-control permitted-cross-domain-policies="all"/><allow-access-from domain="*" secure="false"/></cross-domain-policy>';
     ctx.set('Content-Type', 'application/xml; charset=utf-8');
     ctx.body = crossdomain;
 });
