@@ -119,17 +119,18 @@ router.get('crossdomain.xml', ctx => {
 
 //上传头像
 router.post('avatar/upload', async ctx => {
-
-    console.log(ctx.request);
-    var imgDate = ctx.request.body.file;
-
-    var base64Data = imgDate.replace(/^data:image\/\w+;base64,/, '');
-    var dataBuffer = new Buffer(base64Data, 'base64');
-    ctx.set('Content-Type', 'application/json; charset=utf-8');
-    var data = await saveBuffer(dataBuffer).catch(err => {
-        ctx.body = err;
-    });
-    ctx.body = data;
+    if (ctx.request.body.file) {
+        var imgDate = ctx.request.body.file;
+        var base64Data = imgDate.replace(/^data:image\/\w+;base64,/, '');
+        var dataBuffer = new Buffer(base64Data, 'base64');
+        ctx.set('Content-Type', 'application/json; charset=utf-8');
+        var data = await saveBuffer(dataBuffer).catch(err => {
+            ctx.body = err;
+        });
+        ctx.body = data;
+    } else {
+        ctx.body = { ret: 1, errocde: 5043, "msg": '参数错误' };
+    }
 });
 
 
