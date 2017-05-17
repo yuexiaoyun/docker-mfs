@@ -4,12 +4,12 @@ const app = new koa();
 
 const router = require('koa-router')();
 const convert = require('koa-convert');
-const bodyparser = require('koa-bodyparser')();
+// const bodyparser = require('koa-bodyparser')();
 const logger = require('koa-logger');
 const body = require('koa-body');
 const mfs = require('./routes/mfs');
 
-app.use(convert(bodyparser));
+// app.use(convert(bodyparser));
 app.use(convert(logger()));
 app.use(convert(body({
     multipart: true,

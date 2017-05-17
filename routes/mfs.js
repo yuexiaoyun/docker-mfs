@@ -4,6 +4,30 @@ const Router = require('koa-router');
 const sizeOf = require('image-size');
 const fs = require('fs');
 const path = require("path");
+const crypto = require('crypto');
+
+function saveBuffer(dataBuffer) {
+
+    return new Promise((resolve, reject) => {
+        var md5sum = crypto.createHash('sha256');
+        var md5 = md5sum.update(dataBuffer).digest('hex');
+        var filename = md5;
+
+        fs.writeFile('/data/mfs/avatars/' + filename, dataBuffer, error => {
+            if (error) {
+                console.log(error);
+                reject({ ret: 1, errocde: 5043, "msg": '未知错误' });
+            } else {
+                resolve({
+                    "ret": 0,
+                    "errcode": 0,
+                    "msg": "success",
+                    "data": "http://rimg3.ciwong.net/avatars/" + filename + '/100'
+                });
+            }
+        });
+    });
+}
 
 function save(npath, file) {
     return new Promise((resolve, reject) => {
@@ -92,6 +116,22 @@ router.get('crossdomain.xml', ctx => {
     ctx.set('Content-Type', 'application/xml; charset=utf-8');
     ctx.body = crossdomain;
 });
+
+//上传头像
+router.post('avatar/upload', async ctx => {
+
+    console.log(ctx.request);
+    var imgDate = ctx.request.body.file;
+
+    var base64Data = imgDate.replace(/^data:image\/\w+;base64,/, '');
+    var dataBuffer = new Buffer(base64Data, 'base64');
+    ctx.set('Content-Type', 'application/json; charset=utf-8');
+    var data = await saveBuffer(dataBuffer).catch(err => {
+        ctx.body = err;
+    });
+    ctx.body = data;
+});
+
 
 router.post('admin_uc/images/10086', async ctx => {
     var npath = 'admin_uc/images/10086';
