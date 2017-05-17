@@ -124,8 +124,19 @@ router.get('crossdomain.xml', ctx => {
     ctx.body = crossdomain;
 });
 
+router.options('avatar/upload', async ctx => {
+    ctx.set('Access-Control-Allow-Origin', '*'); 
+    ctx.set('Access-Control-Allow-Methods', 'POST, OPTIONS');
+    // ctx.set('Access-Control-Allow-Headers', 'Origin, No-Cache, X-Requested-With, If-Modified-Since, Pragma, Last-Modified, Cache-Control, Expires, Content-Type, X-E4M-With');
+    ctx.status = 204;
+});
+
 //上传头像
 router.post('avatar/upload', async ctx => {
+    ctx.set('Access-Control-Allow-Origin', '*'); 
+    ctx.set('Access-Control-Allow-Methods', 'POST, OPTIONS');
+    // ctx.set('Access-Control-Allow-Headers', 'Origin, No-Cache, X-Requested-With, If-Modified-Since, Pragma, Last-Modified, Cache-Control, Expires, Content-Type, X-E4M-With');
+
     if (ctx.request.body.file) {
         var imgDate = ctx.request.body.file;
         var base64Data = imgDate.replace(/^data:image\/\w+;base64,/, '');
