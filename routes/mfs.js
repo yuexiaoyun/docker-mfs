@@ -9,23 +9,30 @@ const crypto = require('crypto');
 function saveBuffer(dataBuffer) {
 
     return new Promise((resolve, reject) => {
+
         var md5sum = crypto.createHash('sha256');
         var md5 = md5sum.update(dataBuffer).digest('hex');
         var filename = md5;
+        var filepath = '/data/mfs/avatars/' + filename;
 
-        fs.writeFile('/data/mfs/avatars/' + filename, dataBuffer, error => {
-            if (error) {
-                console.log(error);
-                reject({ ret: 1, errocde: 5043, "msg": '未知错误' });
-            } else {
-                resolve({
-                    "ret": 0,
-                    "errcode": 0,
-                    "msg": "success",
-                    "data": "http://rimg3.ciwong.net/avatars/" + filename + '/100'
-                });
-            }
-        });
+        var rest = {
+            "ret": 0,
+            "errcode": 0,
+            "msg": "success",
+            "data": "http://rimg3.ciwong.net/avatars/" + filename + '/100'
+        };
+        if (fs.exists(filepath))
+            resolve(data);
+        else {
+            fs.writeFile('/data/mfs/avatars/' + filename, dataBuffer, error => {
+                if (error) {
+                    console.log(error);
+                    reject({ ret: 1, errocde: 5043, "msg": '未知错误' });
+                } else {
+                    resolve(rest);
+                }
+            });
+        }
     });
 }
 
@@ -110,7 +117,7 @@ router.get('/', function*() {
     this.body = 'MFS';
 });
 
-
+//flash上传校验
 router.get('crossdomain.xml', ctx => {
     var crossdomain = '<?xml version="1.0"?><cross-domain-policy><allow-http-request-headers-from domain="*" headers="*"/><site-control permitted-cross-domain-policies="all"/><allow-access-from domain="*" secure="false"/></cross-domain-policy>';
     ctx.set('Content-Type', 'application/xml; charset=utf-8');
@@ -132,8 +139,7 @@ router.post('avatar/upload', async ctx => {
         ctx.body = { ret: 1, errocde: 5043, "msg": '参数错误' };
     }
 });
-
-
+//希望后台上传
 router.post('admin_uc/images/10086', async ctx => {
     var npath = 'admin_uc/images/10086';
     if (ctx.request.body.files) {
@@ -154,7 +160,7 @@ router.post('admin_uc/images/10086', async ctx => {
         };
     }
 });
-
+//其他上传
 router.post('*', async ctx => {
     var npath = ctx.params[0];
     if (ctx.request.body.files) {
