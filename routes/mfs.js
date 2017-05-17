@@ -147,7 +147,7 @@ router.post('avatar/upload', async ctx => {
         });
         ctx.body = data;
     } else {
-        ctx.body = { ret: 1, errocde: 5043, "msg": '参数错误' };
+        ctx.body = { ret: 1, errocde: 5045, "msg": '参数错误' };
     }
 });
 //希望后台上传
