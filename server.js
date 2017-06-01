@@ -8,9 +8,14 @@ const convert = require('koa-convert');
 const logger = require('koa-logger');
 const body = require('koa-body');
 const mfs = require('./routes/mfs');
+const ueditor = require('./routes/ueditor');
 
 // app.use(convert(bodyparser));
-app.use(convert(logger()));
+// app.use(convert(logger()));
+
+router.use('/ueditor', ueditor.routes(), ueditor.allowedMethods());
+
+
 app.use(convert(body({
     multipart: true,
     formidable: {
@@ -21,7 +26,9 @@ app.use(convert(body({
     }
 })));
 
+
 router.use('/', mfs.routes(), mfs.allowedMethods());
+
 
 app.use(router.routes());
 

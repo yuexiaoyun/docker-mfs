@@ -124,7 +124,7 @@ router.get('crossdomain.xml', ctx => {
     ctx.body = crossdomain;
 });
 
-router.options('avatar/upload', async ctx => {
+router.options('avatar/upload', ctx => {
     ctx.set('Access-Control-Allow-Origin', '*'); 
     ctx.set('Access-Control-Allow-Methods', 'POST, OPTIONS');
     // ctx.set('Access-Control-Allow-Headers', 'Origin, No-Cache, X-Requested-With, If-Modified-Since, Pragma, Last-Modified, Cache-Control, Expires, Content-Type, X-E4M-With');

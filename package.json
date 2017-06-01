@@ -10,6 +10,7 @@
     "start": "node --harmony server"
   },
   "dependencies": {
+    "aliyun-sdk": "^1.10.5",
     "image-size": "^0.5.1",
     "koa": "^2.2.0",
     "koa-body": "^1.6.0",
