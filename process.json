@@ -1,6 +1,6 @@
 {
     "apps": [{
-        "name": "mfs-api",
+        "name": "oss-ueditor-api",
         "script": "server.js",
         "node_args": "-harmony",
         "watch": true,
