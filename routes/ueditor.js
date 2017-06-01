@@ -46,15 +46,15 @@ router.all('/', async ctx => {
             /* 列出图片 */
         case 'listimage':
             //result = include("action_list.php");
-            break;
+            //break;
             /* 列出文件 */
         case 'listfile':
             //result = include("action_list.php");
-            break;
+            //break;
             /* 抓取远程文件 */
         case 'catchimage':
             //result = include("action_crawler.php");
-            break;
+            //break;
         default:
             result = { 'state': '请求地址出错' };
             break;
