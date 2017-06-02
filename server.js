@@ -5,7 +5,7 @@ const app = new koa();
 const router = require('koa-router')();
 const ueditor = require('./routes/ueditor');
 
-router.use('/ueditor', ueditor.routes(), ueditor.allowedMethods());
+router.use('/', ueditor.routes(), ueditor.allowedMethods());
 
 app.use(router.routes());
 

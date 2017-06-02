@@ -2,26 +2,29 @@
 const Router = require('koa-router');
 const fs = require('fs');
 const uploader = require('../libs/uploader');
-
-var getConfig = function() {
-    return new Promise((resolve, reject) => {
-        try {
-            var data = fs.readFileSync("config/config.json", "utf-8");
-            var json = data.replace(/\/\*[\s\S]+?\*\//, '');
-            resolve(json);
-        } catch (error) {
-            reject(error);
-        }
-    });
-};
+var conf = require('../config/config.json');
 
 var router = new Router();
-router.options('/', ctx => {
+
+router.get('crossdomain.xml', ctx => {
+    var xml = '<?xml version="1.0"?>\
+    <cross-domain-policy>\
+        <allow-http-request-headers-from domain="*" headers="*"/>\
+        <site-control permitted-cross-domain-policies="all"/>\
+        <allow-access-from domain="*.ciwong.com" />\
+        <allow-access-from domain="*.jiaofuyun.com" />\
+    </cross-domain-policy>';
+    ctx.set('Content-Type', 'text/xml; charset=utf-8');
+    ctx.body = xml;
+});
+
+router.options('controller', ctx => {
     ctx.set('Access-Control-Allow-Origin', '*');
     ctx.set('Access-Control-Allow-Headers', 'X-Requested-With,X_Requested_With');
     ctx.status = 200;
 });
-router.all('/', async ctx => {
+
+router.all('controller', async ctx => {
 
     var action = ctx.request.query.action;
     var callback = ctx.request.query.callback;
@@ -29,28 +32,56 @@ router.all('/', async ctx => {
 
     switch (action) {
         case 'config':
-            result = await getConfig();
+            result = JSON.stringify(conf);
             break;
             /* 上传图片 */
         case 'uploadimage':
+            result = await uploader.ueditor(ctx, {
+                actionName: conf.imageActionName,
+                fieldName: conf.imageFieldName,
+                allowFiles: conf.imageAllowFiles,
+                maxSize: conf.imageMaxSize,
+                pathFormat: conf.imagePathFormat
+            }).catch(err => { throw err; });
+            break;
             /* 上传涂鸦 */
         case 'uploadscrawl':
+            result = await uploader.ueditor(ctx, {
+                actionName: conf.scrawlActionName,
+                fieldName: conf.scrawlFieldName,
+                allowFiles: conf.imageAllowFiles,
+                maxSize: conf.scrawlMaxSize,
+                pathFormat: conf.scrawlPathFormat
+            }).catch(err => { throw err; });
+            break;
             /* 上传视频 */
         case 'uploadvideo':
+            result = await uploader.ueditor(ctx, {
+                actionName: conf.videoActionName,
+                fieldName: conf.videoFieldName,
+                allowFiles: conf.videoAllowFiles,
+                maxSize: conf.videoMaxSize,
+                pathFormat: conf.videoPathFormat
+            }).catch(err => { throw err; });
+            break;
             /* 上传文件 */
         case 'uploadfile':
-            result = await uploader.ueditor(ctx).catch(err => {
-                throw err;
-            });
+            result = await uploader.ueditor(ctx, {
+                actionName: conf.fileActionName,
+                fieldName: conf.fileFieldName,
+                allowFiles: conf.fileAllowFiles,
+                maxSize: conf.fileMaxSize,
+                pathFormat: conf.filePathFormat
+            }).catch(err => { throw err; });
             break;
             /* 列出图片 */
         case 'listimage':
-            //result = include("action_list.php");
-            //break;
-            /* 列出文件 */
+            // result = { "state": "no match file", "list": [], "start": 0, "total": 0 };
+            // break;
+            // /* 列出文件 */
         case 'listfile':
-            //result = include("action_list.php");
-            //break;
+            result = { "state": "no match file", "list": [], "start": 0, "total": 0 };
+            break;
             /* 抓取远程文件 */
         case 'catchimage':
             //result = include("action_crawler.php");
@@ -70,8 +101,8 @@ router.all('/', async ctx => {
     } else {
         ctx.set('Access-Control-Allow-Origin', '*');
         ctx.set('Access-Control-Allow-Headers', 'X-Requested-With,X_Requested_With');
-        ctx.set('Content-Type', 'text/html; charset=utf-8');
-        ctx.body = JSON.stringify(result);
+        // ctx.set('Content-Type', 'text/html; charset=utf-8');
+        ctx.body = result;
     }
 });
 
