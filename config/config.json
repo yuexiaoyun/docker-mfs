@@ -7,7 +7,7 @@
     "imageCompressBorder": 1600,
     "imageInsertAlign": "none",
     "imageUrlPrefix": "http://ep.dzb.ciwong.com",
-    "imagePathFormat": "/ueditor/image/{hash}",
+    "imagePathFormat": "/ueditor/image/{yyyy}/{hash}",
 
     "scrawlActionName": "uploadscrawl",
     "scrawlFieldName": "upfile",
@@ -18,7 +18,7 @@
 
 
     "snapscreenActionName": "uploadimage",
-    "snapscreenPathFormat": "/ueditor/php/upload/image/{yyyy}{mm}{dd}/{time}{rand:6}",
+    "snapscreenPathFormat": "/ueditor/snapscreen/{yyyy}{mm}{dd}/{time}{rand:6}",
     "snapscreenUrlPrefix": "http://ep.dzb.ciwong.com",
     "snapscreenInsertAlign": "none",
 
@@ -27,7 +27,7 @@
     "catcherLocalDomain": ["127.0.0.1", "localhost", "img.baidu.com"],
     "catcherActionName": "catchimage",
     "catcherFieldName": "source",
-    "catcherPathFormat": "/ueditor/php/upload/image/{yyyy}{mm}{dd}/{time}{rand:6}",
+    "catcherPathFormat": "/ueditor/catcher/{yyyy}{mm}{dd}/{time}{rand:6}",
     "catcherUrlPrefix": "",
     "catcherMaxSize": 2048000,
     "catcherAllowFiles": [".png", ".jpg", ".jpeg", ".gif", ".bmp"],
@@ -35,7 +35,7 @@
 
     "videoActionName": "uploadvideo",
     "videoFieldName": "upfile",
-    "videoPathFormat": "/ueditor/php/upload/video/{yyyy}{mm}{dd}/{time}{rand:6}",
+    "videoPathFormat": "/ueditor/video/{yyyy}{mm}{dd}/{time}{rand:6}",
     "videoUrlPrefix": "http://ep.dzb.ciwong.com",
     "videoMaxSize": 102400000,
     "videoAllowFiles": [
@@ -46,7 +46,7 @@
 
     "fileActionName": "uploadfile",
     "fileFieldName": "upfile",
-    "filePathFormat": "/ueditor/php/upload/file/{yyyy}{mm}{dd}/{time}{rand:6}",
+    "filePathFormat": "/ueditor/file/{yyyy}{mm}{dd}/{time}{rand:6}",
     "fileUrlPrefix": "http://ep.dzb.ciwong.com",
     "fileMaxSize": 51200000,
 
@@ -59,7 +59,7 @@
     ],
 
     "imageManagerActionName": "listimage",
-    "imageManagerListPath": "/ueditor/php/upload/image/",
+    "imageManagerListPath": "/ueditor/image/",
     "imageManagerListSize": 20,
     "imageManagerUrlPrefix": "",
     "imageManagerInsertAlign": "none",
@@ -68,7 +68,7 @@
 
 
     "fileManagerActionName": "listfile",
-    "fileManagerListPath": "/ueditor/php/upload/file/",
+    "fileManagerListPath": "/ueditor/file/",
     "fileManagerUrlPrefix": "",
     "fileManagerListSize": 20,
     "fileManagerAllowFiles": [
